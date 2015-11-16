@@ -17,7 +17,6 @@ class m151116_162817_geoip extends Migration
     // Use safeUp/safeDown to run migration code within a transaction
     public function safeUp()
     {   
-        
         $this->createTable('{{%geoip_district}}', [
                 'district_id' => $this->primaryKey(),
                 'district_name' => $this->string()->notNull(),
