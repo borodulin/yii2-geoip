@@ -53,18 +53,55 @@ class GeoipController extends \yii\console\Controller
             if (($handle = fopen('zip://'.$zipArchive.'#cidr_optim.txt', "r")) !== FALSE)
             {
                 stream_filter_append($handle, 'convert.iconv.Windows-1251/UTF-8');
-                $tran = Range::getDb()->beginTransaction();
+                
+                $db = Range::getDb();
+                
+                $tran = $db->beginTransaction();                
+                // Rewrite all
+                Range::deleteAll();
+
+                $rows = [];
+                $time = time();
                 while (($data = fgetcsv($handle, 4096, "\t")) !== FALSE)
                 {
-                    Range::upsert([
+                    $rows[] = [
                             'ip_start' => $data[2],
                             'ip_end' => $data[3],
                             'ip_range' => ($data[4]=='-') ? null : $data[4],
                             'ip_country' => $data[5],
                             'city_id' => $data[6],
-                    ]);
+                            'created_at' => $time,
+                            'updated_at' => $time,
+                    ];
+                    if (count($rows) == 1000) {
+                        $db->createCommand()
+                            ->batchInsert(Range::tableName(), [
+                                    'ip_start',
+                                    'ip_end',
+                                    'ip_range',
+                                    'ip_country',
+                                    'city_id',
+                                    'created_at',
+                                    'updated_at'
+                            ], $rows)
+                            ->execute();
+                    }
+                }
+                if (count($rows) > 0) {
+                    $db->createCommand()
+                        ->batchInsert(Range::tableName(), [
+                                'ip_start',
+                                'ip_end',
+                                'ip_range',
+                                'ip_country',
+                                'city_id',
+                                'created_at',
+                                'updated_at'
+                        ], $rows)
+                        ->execute();
                 }
                 $tran->commit();
+                
                 fclose($handle);
             }
         }
