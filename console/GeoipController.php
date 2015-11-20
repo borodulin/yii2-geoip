@@ -67,7 +67,7 @@ class GeoipController extends \yii\console\Controller
                     $rows[] = [
                             'ip_start' => $data[2],
                             'ip_end' => $data[3],
-                            'ip_range' => ($data[4]=='-') ? null : $data[4],
+                            'ip_range' => ($data[4] == '-') ? null : $data[4],
                             'ip_country' => $data[5],
                             'city_id' => $data[6],
                             'created_at' => $time,
