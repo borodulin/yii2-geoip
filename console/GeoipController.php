@@ -74,31 +74,11 @@ class GeoipController extends \yii\console\Controller
                             'updated_at' => $time,
                     ];
                     if (count($rows) == 1000) {
-                        $db->createCommand()
-                            ->batchInsert(Range::tableName(), [
-                                    'ip_start',
-                                    'ip_end',
-                                    'ip_range',
-                                    'ip_country',
-                                    'city_id',
-                                    'created_at',
-                                    'updated_at'
-                            ], $rows)
-                            ->execute();
+                        Range::batchInsert($rows);
                     }
                 }
                 if (count($rows) > 0) {
-                    $db->createCommand()
-                        ->batchInsert(Range::tableName(), [
-                                'ip_start',
-                                'ip_end',
-                                'ip_range',
-                                'ip_country',
-                                'city_id',
-                                'created_at',
-                                'updated_at'
-                        ], $rows)
-                        ->execute();
+                    Range::batchInsert($rows);
                 }
                 $tran->commit();
                 

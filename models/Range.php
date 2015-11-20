@@ -10,6 +10,7 @@ namespace conquer\geoip\models;
 use yii\behaviors\TimestampBehavior;
 use yii\base\Exception;
 use yii\helpers\VarDumper;
+use yii\db\Command;
 
 /**
  * This is the model class for table "{{%geoip_range}}".
@@ -111,5 +112,25 @@ class Range extends \yii\db\ActiveRecord
                 ->one();
         }
         return null;
-    }   
+    }
+    
+    /**
+     * 
+     * @param array $rows
+     * @return Command
+     */
+    public static function batchInsert($rows)
+    {
+        return static::getDb()->createCommand()
+            ->batchInsert(static::tableName(), [
+                    'ip_start',
+                    'ip_end',
+                    'ip_range',
+                    'ip_country',
+                    'city_id',
+                    'created_at',
+                    'updated_at'
+            ], $rows)
+            ->execute();
+    }
 }
