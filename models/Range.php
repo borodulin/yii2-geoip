@@ -9,11 +9,10 @@ namespace conquer\geoip\models;
 
 use yii\behaviors\TimestampBehavior;
 use yii\base\Exception;
-use yii\helpers\VarDumper;
 use yii\db\Command;
 
 /**
- * This is the model class for table "{{%geoip_range}}".
+ * This is the model class for table "{{%range}}".
  *
  * @property integer $ip_start
  * @property integer $ip_end
@@ -32,7 +31,8 @@ class Range extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%geoip_range}}';
+        $geoip = Yii::$app->get('geoip');
+        return $geoip->rangeTable;
     }
 
     /**
@@ -89,9 +89,7 @@ class Range extends \yii\db\ActiveRecord
         } else {
             $model->setAttributes($attributes);
         }
-        if (!$model->save()) {
-            throw new Exception(VarDumper::dumpAsString($model->errors));
-        }
+        $model->save(false);
         return $model;
     }
     

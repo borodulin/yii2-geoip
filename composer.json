@@ -1,0 +1,32 @@
+{
+    "name": "conquer/geoip",
+    "description": "Yii2 geoip componet",
+    "keywords": ["yii2", "extension", "component", "geoip"],
+    "homepage": "https://github.com/borodulin/yii2-geoip",
+    "type": "yii2-extension",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/borodulin/yii2-geoip/issues",
+        "source": "https://github.com/borodulin/yii2-geoip"
+    },
+    "authors": [
+        {
+            "name": "Andrey Borodulin",
+            "email": "borodulin@gmail.com"
+        }
+    ],
+    "extra": {
+        "branch-alias": {
+          "dev-master": "1.0.0.x-dev"
+        }
+      },
+    "require": {
+    	"php": ">=5.4.0",
+    	"yiisoft/yii2": "*"
+    },
+	"autoload": {
+		"psr-4": {
+			"conquer\\geoip\\": ""
+		}
+	}
+}

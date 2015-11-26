@@ -17,16 +17,19 @@ class m151116_162817_geoip extends Migration
     // Use safeUp/safeDown to run migration code within a transaction
     public function safeUp()
     {   
-        $this->createTable('{{%geoip_district}}', [
+        /* @var $geoip \conquer\geoip\Geoip */
+        $geoip = Yii::$app->get('geoip');
+        
+        $this->createTable($geoip->districtTable, [
                 'district_id' => $this->primaryKey(),
                 'district_name' => $this->string()->notNull(),
                 'created_at' => $this->integer()->notNull(),
                 'updated_at' => $this->integer()->notNull(),
         ]);
         
-        $this->createIndex('uix_geoip_district', '{{%geoip_district}}', 'district_name', true);
+        $this->createIndex('uix_geoip_district', $geoip->districtTable, 'district_name', true);
         
-        $this->createTable('{{%geoip_region}}', [
+        $this->createTable($geoip->regionTable, [
                 'region_id' => $this->primaryKey(),
                 'district_id' => $this->integer()->notNull(),
                 'region_name' => $this->string()->notNull(),
@@ -34,10 +37,10 @@ class m151116_162817_geoip extends Migration
                 'updated_at' => $this->integer()->notNull(),
         ]);
   
-        $this->createIndex('uix_geoip_region', '{{%geoip_region}}', ['district_id', 'region_name'], true);
-        $this->addForeignKey('fk_geoip_region_district', '{{%geoip_region}}', 'district_id', '{{%geoip_district}}', 'district_id','cascade','cascade');
+        $this->createIndex('uix_geoip_region', $geoip->regionTable, ['district_id', 'region_name'], true);
+        $this->addForeignKey('fk_geoip_region_district', $geoip->regionTable, 'district_id', $geoip->districtTable, 'district_id','cascade','cascade');
         
-        $this->createTable('{{%geoip_city}}', [
+        $this->createTable($geoip->cityTable, [
                 'city_id' => $this->integer()->notNull(),
                 'city_name' => $this->string()->notNull(),
                 'region_id' => $this->integer()->notNull(),
@@ -46,10 +49,10 @@ class m151116_162817_geoip extends Migration
                 'created_at' => $this->integer()->notNull(),
                 'updated_at' => $this->integer()->notNull(),
         ]);
-        $this->addPrimaryKey('pk_geoip_city', '{{%geoip_city}}', 'city_id');
-        $this->addForeignKey('fk_geoip_city_region', '{{%geoip_city}}', 'region_id', '{{%geoip_region}}', 'region_id','cascade','cascade');
+        $this->addPrimaryKey('pk_geoip_city', $geoip->cityTable, 'city_id');
+        $this->addForeignKey('fk_geoip_city_region', $geoip->cityTable, 'region_id', $geoip->regionTable, 'region_id','cascade','cascade');
         
-        $this->createTable('{{%geoip_range}}', [
+        $this->createTable($geoip->rangeTable, [
                 'ip_start' => $this->integer()->notNull(),
                 'ip_end' => $this->integer()->notNull(),
                 'ip_range' => $this->string(),
@@ -58,15 +61,17 @@ class m151116_162817_geoip extends Migration
                 'created_at' => $this->integer()->notNull(),
                 'updated_at' => $this->integer()->notNull(),
         ]);
-        $this->addPrimaryKey('pk_geoip_range', '{{%geoip_range}}', ['ip_start', 'ip_end']);
-        $this->addForeignKey('fk_geoip_range_city', '{{%geoip_range}}', 'city_id', '{{%geoip_city}}', 'city_id', 'set null', 'cascade');
+        $this->addPrimaryKey('pk_geoip_range', $geoip->rangeTable, ['ip_start', 'ip_end']);
+        $this->addForeignKey('fk_geoip_range_city', $geoip->rangeTable, 'city_id', $geoip->cityTable, 'city_id', 'set null', 'cascade');
     }
     
     public function safeDown()
     {
-        $this->dropTable('{{%geoip_range}}');
-        $this->dropTable('{{%geoip_city}}');
-        $this->dropTable('{{%geoip_region}}');
-        $this->dropTable('{{%geoip_district}}');
+        $geoip = Yii::$app->get('geoip');
+        
+        $this->dropTable($geoip->rangeTable);
+        $this->dropTable($geoip->cityTable);
+        $this->dropTable($geoip->regionTable);
+        $this->dropTable($geoip->districtTable);
     }
 }

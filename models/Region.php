@@ -7,11 +7,10 @@
 
 namespace conquer\geoip\models;
 
-use yii\helpers\VarDumper;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "{{%geoip_region}}".
+ * This is the model class for table "{{%region}}".
  *
  * @property integer $region_id
  * @property integer $district_id
@@ -29,7 +28,8 @@ class Region extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%geoip_region}}';
+        $geoip = Yii::$app->get('geoip');
+        return $geoip->regionTable;
     }
 
     /**
@@ -86,9 +86,7 @@ class Region extends \yii\db\ActiveRecord
         $model = static::findOne($attributes);
         if (!$model) {
             $model = new static($attributes);
-            if (!$model->save()) {
-                throw new Exception(VarDumper::dumpAsString($model->errors));
-            }
+            $model->save(false);
         }
         return $model;
     }
