@@ -65,9 +65,9 @@ class City extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCity()
+    public function getRegion()
     {
-        return $this->hasOne(City::className(), ['city_id' => 'city_id']);
+        return $this->hasOne(Region::className(), ['region_id' => 'region_id']);
     }
     
     /**
