@@ -7,7 +7,7 @@ Geo IP component for Yii2 framework
 
 ## Установка
 
-Устанавливать можно через композер [composer](http://getcomposer.org/download/). 
+Устанавливать нужно через композер [composer](http://getcomposer.org/download/). 
 
 Командой:
 
@@ -22,7 +22,7 @@ $ php composer.phar require conquer/select2 "*"
 
 в секцию ```require``` файла проекта `composer.json`.
 
-Обязательно запустить миграцию командой:
+Чтобы создать структуру БД нужно запустить миграцию:
 
 ```
 $ yii migrate --migrationPath=@conquer/geoip/migrations
@@ -30,8 +30,8 @@ $ yii migrate --migrationPath=@conquer/geoip/migrations
 
 ## Настройка
 
-Обязательно требуется указать компоненту "geoip".
-Дополнительно можно настроить имена таблиц:
+Требуется указать компоненту "geoip".
+Дополнительно можно настроить имена таблиц (! до запуска миграции):
 
 ```php
  'components' => [
