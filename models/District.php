@@ -25,6 +25,8 @@ use yii\behaviors\TimestampBehavior;
  */
 class District extends \yii\db\ActiveRecord
 {
+    private static $_models;
+    
     /**
      * @inheritdoc
      */
@@ -71,17 +73,23 @@ class District extends \yii\db\ActiveRecord
     }
 
     /**
-     * @param array $attributes
+     * @param string $name
      * @throws Exception
      * @return static
      */
-    public static function getsert($attributes)
+    public static function getsert($name)
     {
-        $model = static::findOne($attributes);
-        if (!$model) {
-            $model = new static($attributes);
-            $model->save(false);
+        if (is_null(self::$_models)) {
+            self::$_models = static::find()->indexBy('district_name')->all();
         }
-        return $model;
+        
+        if (isset(self::$_models[$name])) {
+            return self::$_models[$name];
+        }
+        
+        $model = new static(['district_name' => $name]);
+        $model->save(false);
+        
+        return self::$_models[$name] = $model;
     }
 }

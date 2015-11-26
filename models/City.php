@@ -27,6 +27,8 @@ use yii\behaviors\TimestampBehavior;
  */
 class City extends \yii\db\ActiveRecord
 {
+    private static $_models;
+    
     public static function tableName()
     {
         $geoip = Yii::$app->get('geoip');
@@ -71,18 +73,25 @@ class City extends \yii\db\ActiveRecord
     }
     
     /**
-     * @param array $attributes
+     * @param integer $region_id
+     * @param string $city_name
      * @throws Exception
      * @return static
      */
-    public static function upsert(array $attributes)
+    public static function upsert($attributes)
     {
-        $model = static::findOne(['city_id' => $attributes['city_id']]);
-        if (!$model) {
-            $model = new static($attributes);
+        if (isset(self::$_models[$attributes['city_id']])) {
+            return self::$_models[$attributes['city_id']];
+        } else {
+            $model = City::findOne($attributes['city_id']);
+            if (!$model) {
+                $model = new City();
+            }
+            $model->setAttributes($attributes);
             $model->save(false);
+            
+            return self::$_models[$attributes['city_id']] = $model;
         }
-        return $model;
     }
     
 }

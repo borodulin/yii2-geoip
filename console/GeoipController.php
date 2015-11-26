@@ -27,19 +27,20 @@ class GeoipController extends \yii\console\Controller
         file_put_contents($zipArchive, fopen('http://ipgeobase.ru/files/db/Main/geo_files.zip', 'r'));
         if(file_exists($zipArchive))
         {
+            $tran = $db->beginTransaction();
+
+            // Rewrite all
+            Range::deleteAll();
+            City::deleteAll();
+            
             if (($handle = fopen('zip://'.$zipArchive.'#cities.txt', "r")) !== FALSE)
             {
                 stream_filter_append($handle, 'convert.iconv.Windows-1251/UTF-8');
                 while (($data = fgetcsv($handle, 4096, "\t")) !== FALSE)
                 {
-                    $district = District::getsert([
-                            'district_name' => $data[3],
-                    ]);
+                    $district = District::getsert($data[3]);
                     	
-                    $region = Region::getsert([
-                            'district_id' => $district->district_id,
-                            'region_name' => $data[2],
-                    ]);
+                    $region = Region::getsert($district->district_id, $data[2]);
                     
                     $city = City::upsert([
                             'city_id' => $data[0],
@@ -57,10 +58,6 @@ class GeoipController extends \yii\console\Controller
                 
                 $db = Range::getDb();
                 
-                $tran = $db->beginTransaction();                
-                // Rewrite all
-                Range::deleteAll();
-
                 $rows = [];
                 $time = time();
                 while (($data = fgetcsv($handle, 4096, "\t")) !== FALSE)
@@ -82,10 +79,9 @@ class GeoipController extends \yii\console\Controller
                 if (count($rows) > 0) {
                     Range::batchInsert($rows);
                 }
-                $tran->commit();
-                
                 fclose($handle);
             }
+            $tran->commit();
         }
         
     }
