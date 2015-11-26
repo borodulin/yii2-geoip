@@ -66,16 +66,17 @@ class GeoipController extends \yii\console\Controller
                 while (($data = fgetcsv($handle, 4096, "\t")) !== FALSE)
                 {
                     $rows[] = [
-                            'ip_start' => $data[2],
-                            'ip_end' => $data[3],
-                            'ip_range' => ($data[4] == '-') ? null : $data[4],
-                            'ip_country' => $data[5],
-                            'city_id' => $data[6],
+                            'ip_start' => $data[0],
+                            'ip_end' => $data[1],
+                            'ip_range' => ($data[2] == '-') ? null : $data[2],
+                            'ip_country' => $data[3],
+                            'city_id' => ($data[4] == '-') ? null : $data[4],
                             'created_at' => $time,
                             'updated_at' => $time,
                     ];
                     if (count($rows) == 1000) {
                         Range::batchInsert($rows);
+                        $rows = [];
                     }
                 }
                 if (count($rows) > 0) {

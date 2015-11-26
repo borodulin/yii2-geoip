@@ -53,8 +53,8 @@ class m151116_162817_geoip extends Migration
         $this->addForeignKey('fk_geoip_city_region', $geoip->cityTable, 'region_id', $geoip->regionTable, 'region_id','cascade','cascade');
         
         $this->createTable($geoip->rangeTable, [
-                'ip_start' => $this->integer()->notNull(),
-                'ip_end' => $this->integer()->notNull(),
+                'ip_start' =>  $this->bigInteger()->notNull(),
+                'ip_end' => $this->bigInteger()->notNull(),
                 'ip_range' => $this->string(),
                 'ip_country' => $this->string(),
                 'city_id' => $this->integer(),
