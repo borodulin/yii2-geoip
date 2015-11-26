@@ -27,7 +27,7 @@ class GeoipController extends \yii\console\Controller
         file_put_contents($zipArchive, fopen('http://ipgeobase.ru/files/db/Main/geo_files.zip', 'r'));
         if(file_exists($zipArchive))
         {
-            $tran = $db->beginTransaction();
+            $tran = \Yii::$app->db->beginTransaction();
 
             // Rewrite all
             Range::deleteAll();
@@ -55,8 +55,6 @@ class GeoipController extends \yii\console\Controller
             if (($handle = fopen('zip://'.$zipArchive.'#cidr_optim.txt', "r")) !== FALSE)
             {
                 stream_filter_append($handle, 'convert.iconv.Windows-1251/UTF-8');
-                
-                $db = Range::getDb();
                 
                 $rows = [];
                 $time = time();
