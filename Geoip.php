@@ -7,13 +7,28 @@
 
 namespace conquer\geoip;
 
-class Geoip extends \yii\base\Component
+use conquer\geoip\console\GeoipController;
+
+class Geoip extends \yii\base\Component implements \yii\base\BootstrapInterface
 {
     public $cityTable = '{{%city}}';
     
-    public $districtTable = '{{%region}}';
+    public $districtTable = '{{%district}}';
     
     public $rangeTable = '{{%range}}';
     
     public $regionTable = '{{%region}}';
+    
+    
+    /**
+     * @inheritdoc
+     */
+    public function bootstrap($app)
+    {
+        if ($app instanceof \yii\console\Application) {
+            $app->controllerMap['geoip'] = [
+                    'class' => GeoipController::className(),
+            ];
+        }
+    }
 }

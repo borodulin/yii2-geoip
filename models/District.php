@@ -7,6 +7,7 @@
 
 namespace conquer\geoip\models;
 
+use Yii;
 use yii\base\Exception;
 use yii\behaviors\TimestampBehavior;
 
@@ -30,7 +31,7 @@ class District extends \yii\db\ActiveRecord
     public static function tableName()
     {
         $geoip = Yii::$app->get('geoip');
-        return $geoip->regionTable;
+        return $geoip->districtTable;
     }
 
     /**

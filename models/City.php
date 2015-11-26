@@ -7,6 +7,7 @@
 
 namespace conquer\geoip\models;
 
+use Yii;
 use yii\behaviors\TimestampBehavior;
 
 /**
