@@ -1,7 +1,7 @@
 {
     "name": "conquer/geoip",
     "description": "Yii2 geoip componet",
-    "keywords": ["yii2", "extension", "component", "geoip"],
+    "keywords": ["yii2", "extension", "component", "geoip", "ipgeobase"],
     "homepage": "https://github.com/borodulin/yii2-geoip",
     "type": "yii2-extension",
     "license": "MIT",
