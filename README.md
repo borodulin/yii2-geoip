@@ -1,6 +1,8 @@
 Geo IP component for Yii2 framework
 =================
 
+> **This package is abandoned and no longer maintained.** The ipgeobase.ru database this component downloads is no longer available.
+
 ## Описание
 
 Компонент для работы с базой [ipgeobase.ru](http://ipgeobase.ru)
